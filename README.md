@@ -8,7 +8,7 @@ A chave do Gemini fica **somente no backend**; o navegador nunca a recebe.
 
 ## Contexto acadêmico
 
-Este repositório é o produto de um **Trabalho de Conclusão de Curso** desenvolvido em parceria com a **Fatec Mogi das Cruzes**, com o time de **Agronegócios**.
+Este repositório é o produto de um **Trabalho de Conclusão de Curso** desenvolvido em parceria com a [**Fatec Mogi das Cruzes**](https://www.fatecmogidascruzes.com.br), com o time de **Agronegócios**.
 
 A proposta do TCC é **levar tecnologia a pequenos agricultores da região de Mogi das Cruzes**. Em sua maioria, esses produtores não têm um meio sistemático de controlar o processo produtivo: custos, tratos culturais, receitas e documentos ficam no caderno, na memória ou em planilhas soltas. Sem esse controle, fica difícil saber o custo real da lavoura, o resultado de cada cultura e o que a propriedade de fato ganha ou perde.
 
@@ -168,10 +168,11 @@ O `.gitignore` da raiz cobre o monorepo: `node_modules/`, `dist/`, `target/`, `.
 
 Distribuído sob a [PolyForm Noncommercial License 1.0.0](LICENSE).
 
-Uso permitido para fins não comerciais: estudo, pesquisa, TCC, aulas na Fatec e uso gratuito por produtores, cooperativas e instituições de ensino ou governo. **Não é permitido vender** o software, cobrá-lo como produto ou serviço, nem usá-lo para fins comerciais sem autorização do autor.
+Uso permitido para fins não comerciais: estudo, pesquisa, TCC, aulas na Fatec e uso gratuito por produtores, cooperativas e instituições de ensino ou governo. **Não é permitido vender** o software, cobrá-lo como produto ou serviço, nem usá-lo para fins comerciais sem autorização dos autores.
 
 ## Autoria e créditos
 
-- **Software:** [Guilherme Tavares](https://github.com/g-tavares14)
-- **Parceria acadêmica:** Fatec Mogi das Cruzes — time de Agronegócios
+- **Autores:** [Guilherme Tavares](https://github.com/g-tavares14) e [Renan Alves de Godoy](https://www.linkedin.com/in/renan-alves-de-godoy/)
+- **Coautor:** [Paulo Matos](https://www.linkedin.com/in/paulo-matos-1188611a1/)
+- **Instituição:** [Fatec Mogi das Cruzes](https://www.fatecmogidascruzes.com.br) — time de Agronegócios
 - **Trabalho:** TCC com o objetivo de apoiar pequenos agricultores da região de Mogi das Cruzes no controle do processo produtivo
