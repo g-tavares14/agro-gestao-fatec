@@ -1,0 +1,66 @@
+<section class="feature-page">
+  <header class="page-header">
+    <div>
+      <h2>Propriedades</h2>
+      <p class="lede">Cadastre fazendas e talhões para organizar culturas, custos e documentos.</p>
+    </div>
+    <div class="actions">
+      <button mat-flat-button color="primary" type="button" (click)="openCreate()">
+        <mat-icon>add</mat-icon>
+        Nova propriedade
+      </button>
+    </div>
+  </header>
+
+  @if (error(); as message) {
+    <p class="error-banner" role="alert">{{ message }}</p>
+  }
+
+  @if (loading()) {
+    <div class="loading">
+      <mat-spinner diameter="32" />
+      <span>Carregando propriedades…</span>
+    </div>
+  } @else if (properties().length === 0) {
+    @if (error()) {
+      <app-empty-state
+        icon="error_outline"
+        title="Não foi possível carregar"
+        message="Tente recarregar a página em instantes."
+      />
+    } @else {
+      <app-empty-state
+        icon="landscape"
+        title="Nenhuma propriedade cadastrada"
+        message="Cadastre a primeira propriedade para iniciar o registro das atividades agrícolas."
+      >
+        <button mat-flat-button color="primary" type="button" (click)="openCreate()">
+          Cadastrar propriedade
+        </button>
+      </app-empty-state>
+    }
+  } @else {
+    <div class="card-grid">
+      @for (property of properties(); track property.id) {
+        <article class="entity-card">
+          <h3>{{ property.name }}</h3>
+          <p>{{ locationOf(property) }}</p>
+          <p>
+            @if (property.totalAreaHa != null) {
+              {{ property.totalAreaHa | number: '1.0-2' }} ha
+            } @else {
+              Área não informada
+            }
+          </p>
+          @if (property.description) {
+            <p>{{ property.description }}</p>
+          }
+          <div class="card-actions">
+            <button mat-stroked-button type="button" (click)="openEdit(property)">Editar</button>
+            <button mat-button type="button" (click)="remove(property)">Excluir</button>
+          </div>
+        </article>
+      }
+    </div>
+  }
+</section>

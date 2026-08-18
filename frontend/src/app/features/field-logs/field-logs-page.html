@@ -1,0 +1,150 @@
+<section class="feature-page">
+  <header class="page-header">
+    <div>
+      <h2>Diário de campo</h2>
+      <p class="lede">Registre atividades diárias da propriedade e, quando couber, da cultura.</p>
+    </div>
+  </header>
+
+  @if (error(); as message) {
+    <p class="error-banner" role="alert">{{ message }}</p>
+  }
+
+  @if (loadingProperties()) {
+    <div class="loading">
+      <mat-spinner diameter="32" />
+      <span>Carregando propriedades…</span>
+    </div>
+  } @else if (properties().length === 0) {
+    @if (error()) {
+      <app-empty-state
+        icon="error_outline"
+        title="Não foi possível carregar"
+        message="Tente recarregar a página em instantes."
+      />
+    } @else {
+      <app-empty-state
+        icon="landscape"
+        title="Cadastre uma propriedade primeiro"
+        message="O diário de campo é organizado por propriedade."
+        ctaLabel="Cadastrar propriedade"
+        ctaLink="/app/propriedades"
+      />
+    }
+  } @else {
+    <form class="filter-bar" [formGroup]="filterForm">
+      <mat-form-field appearance="outline">
+        <mat-label>Propriedade</mat-label>
+        <mat-select formControlName="propertyId">
+          <mat-option value="">Selecione</mat-option>
+          @for (property of properties(); track property.id) {
+            <mat-option [value]="property.id">{{ property.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Cultura (opcional)</mat-label>
+        <mat-select formControlName="cropId">
+          <mat-option value="">Todas</mat-option>
+          @for (crop of crops(); track crop.id) {
+            <mat-option [value]="crop.id">{{ crop.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </form>
+
+    @if (!filterForm.controls.propertyId.value) {
+      <app-empty-state
+        icon="filter_alt"
+        title="Selecione uma propriedade"
+        message="Escolha a propriedade para consultar e lançar o diário de campo."
+      />
+    } @else {
+      <section class="panel">
+        <h3>{{ editingId() ? 'Editar registro' : 'Novo registro' }}</h3>
+        <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+          <div class="form-grid">
+            <mat-form-field appearance="outline">
+              <mat-label>Cultura</mat-label>
+              <mat-select formControlName="cropId">
+                <mat-option value="">Geral da propriedade</mat-option>
+                @for (crop of crops(); track crop.id) {
+                  <mat-option [value]="crop.id">{{ crop.name }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Data</mat-label>
+              <input matInput type="date" formControlName="date" />
+              @if (fieldError(form.controls.date); as message) {
+                <mat-error>{{ message }}</mat-error>
+              }
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="full">
+              <mat-label>Atividade</mat-label>
+              <input matInput formControlName="activity" />
+              @if (fieldError(form.controls.activity); as message) {
+                <mat-error>{{ message }}</mat-error>
+              }
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="full">
+              <mat-label>Observações</mat-label>
+              <textarea matInput rows="3" formControlName="notes"></textarea>
+            </mat-form-field>
+          </div>
+          <div class="actions">
+            <button mat-flat-button color="primary" type="submit" [disabled]="submitting()">
+              {{ submitting() ? 'Salvando…' : editingId() ? 'Atualizar' : 'Registrar' }}
+            </button>
+            @if (editingId()) {
+              <button mat-button type="button" (click)="cancelEdit()">Cancelar edição</button>
+            }
+          </div>
+        </form>
+      </section>
+
+      @if (loading()) {
+        <div class="loading">
+          <mat-spinner diameter="32" />
+          <span>Carregando diário…</span>
+        </div>
+      } @else if (logs().length === 0) {
+        @if (!error()) {
+          <app-empty-state
+            icon="menu_book"
+            title="Nenhum registro"
+            message="Lance a primeira atividade de campo desta propriedade."
+          />
+        }
+      } @else {
+        <section class="panel table-wrap">
+          <table class="data">
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Atividade</th>
+                <th>Cultura</th>
+                <th>Observações</th>
+                <th class="num">Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (log of logs(); track log.id) {
+                <tr>
+                  <td>{{ log.date | date: 'shortDate' }}</td>
+                  <td>{{ log.activity }}</td>
+                  <td>{{ cropName(log) }}</td>
+                  <td>{{ log.notes || '—' }}</td>
+                  <td class="actions-cell">
+                    <button mat-button type="button" (click)="startEdit(log)">Editar</button>
+                    <button mat-button type="button" (click)="remove(log)">Excluir</button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </section>
+      }
+    }
+  }
+</section>

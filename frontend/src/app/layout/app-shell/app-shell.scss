@@ -1,0 +1,184 @@
+@use '../../../styles/palette' as palette;
+
+:host {
+  display: block;
+  height: 100%;
+  min-height: 100svh;
+}
+
+.shell {
+  display: flex;
+  min-height: 100svh;
+  height: 100%;
+  background:
+    radial-gradient(circle at top right, rgba(45, 122, 70, 0.07), transparent 36%),
+    palette.$agro-paper;
+}
+
+.sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  background:
+    linear-gradient(180deg, palette.$agro-green-950 0%, palette.$agro-green-900 55%, #10261a 100%);
+  color: palette.$agro-cream;
+}
+
+.sidebar app-brand-mark {
+  display: block;
+}
+
+.nav {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.4rem 0.7rem 1.2rem;
+}
+
+.nav a {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.7rem 0.8rem;
+  border-radius: 12px;
+  color: #dce8df;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.nav a.active,
+.nav a:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.nav mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-height: 72px;
+  padding: 0.7rem 1.25rem;
+  background: color-mix(in srgb, #fff 88%, transparent);
+  border-bottom: 1px solid palette.$agro-line;
+}
+
+.title-block {
+  display: grid;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.eyebrow {
+  margin: 0;
+  color: palette.$agro-amber-700;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.toolbar h1 {
+  margin: 0;
+  font-family: palette.$font-brand;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.user {
+  color: palette.$agro-ink-soft;
+  font-size: 0.92rem;
+}
+
+.logout-btn,
+.menu-btn {
+  border: 1px solid palette.$agro-line;
+  background: #fff;
+  color: palette.$agro-ink;
+  border-radius: 10px;
+  padding: 0.45rem 0.8rem;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.menu-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+}
+
+.menu-btn mat-icon {
+  width: 24px;
+  height: 24px;
+  font-size: 24px;
+  line-height: 24px;
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  border: 0;
+  background: rgba(12, 31, 22, 0.45);
+  z-index: 20;
+}
+
+.main {
+  flex: 1;
+  padding: 1.6rem 1.5rem 2.2rem;
+}
+
+@media (max-width: 720px) {
+  .sidebar {
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 30;
+    transform: translateX(-105%);
+    transition: transform 0.25s ease;
+  }
+
+  .shell.nav-open .sidebar {
+    transform: none;
+  }
+
+  .toolbar {
+    min-height: 60px;
+    padding-inline: 0.7rem;
+  }
+
+  .eyebrow,
+  .user {
+    display: none;
+  }
+
+  .main {
+    padding: 1rem;
+    padding-bottom: max(1.4rem, env(safe-area-inset-bottom));
+  }
+}

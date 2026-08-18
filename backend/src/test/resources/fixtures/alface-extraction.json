@@ -1,0 +1,166 @@
+{
+  "nomeCultura": "Alface",
+  "variedade": null,
+  "sistemaIrrigacao": "Aspersão",
+  "areaHectares": null,
+  "dataPlantio": null,
+  "produtividadeEsperada": "4100.00 cx/5kg",
+  "custoTotal": 44076.26,
+  "custoUnidadeComercializacao": 10.75,
+  "observacoes": "Espaçamento de 0,25 m x 0,25 m em canteiros de 1,0 m de largura e 50 cm de carreador (66 canteiros de 100 m por hectare). Total de 105.600 plantas por hectare. Necessidade de mudas considerando 5% de perdas: 554 bandejas de 200 células. Rendimento de colheita, lavagem e acondicionamento: 50 caixas por dia-homem. Em média 30% das plantas não são colhidas.",
+  "warnings": [
+    "variedade não informada na planilha",
+    "dataPlantio não informada na planilha",
+    "areaHectares nula: ficha de custo por hectare, sem área do talhão",
+    "Mudas (Formação em bandejas de 200 células) reclassificado de SERVIÇOS para insumos",
+    "Energia elétrica p/ irrigação reclassificado de INSUMOS para outros"
+  ],
+  "acoesMecanicas": [
+    {
+      "descricao": "Preparo do solo (Aração)",
+      "unidade": "h/m",
+      "quantidade": 3.0,
+      "valorUnitario": 260.0,
+      "valorTotal": 780.0
+    },
+    {
+      "descricao": "Preparo do solo (Gradagem)",
+      "unidade": "h/m",
+      "quantidade": 2.0,
+      "valorUnitario": 260.0,
+      "valorTotal": 520.0
+    },
+    {
+      "descricao": "Preparo de solo (Lev. cant.c/ rotoencanteirador)",
+      "unidade": "h/m",
+      "quantidade": 4.0,
+      "valorUnitario": 260.0,
+      "valorTotal": 1040.0
+    }
+  ],
+  "acoesManuais": [
+    {
+      "descricao": "Adubação (Manual de cobertura)",
+      "unidade": "d/h",
+      "quantidade": 3.0,
+      "valorUnitario": 110.0,
+      "valorTotal": 330.0
+    },
+    {
+      "descricao": "Adubos (Distribuição manual)",
+      "unidade": "d/h",
+      "quantidade": 4.0,
+      "valorUnitario": 110.0,
+      "valorTotal": 440.0
+    },
+    {
+      "descricao": "Agrotóxico (Aplicação)",
+      "unidade": "d/h",
+      "quantidade": 5.0,
+      "valorUnitario": 110.0,
+      "valorTotal": 550.0
+    },
+    {
+      "descricao": "Capina (Manual)",
+      "unidade": "d/h",
+      "quantidade": 60.0,
+      "valorUnitario": 110.0,
+      "valorTotal": 6600.0
+    },
+    {
+      "descricao": "Colheita/Classificação/Acondicionamento",
+      "unidade": "d/h",
+      "quantidade": 82.0,
+      "valorUnitario": 110.0,
+      "valorTotal": 9020.0
+    },
+    {
+      "descricao": "Irrigação (Aspersão)",
+      "unidade": "d/h",
+      "quantidade": 2.0,
+      "valorUnitario": 110.0,
+      "valorTotal": 220.0
+    },
+    {
+      "descricao": "Irrigação (Montagem do sistema)",
+      "unidade": "d/h",
+      "quantidade": 2.0,
+      "valorUnitario": 110.0,
+      "valorTotal": 220.0
+    },
+    {
+      "descricao": "Transplantio",
+      "unidade": "d/h",
+      "quantidade": 21.0,
+      "valorUnitario": 110.0,
+      "valorTotal": 2310.0
+    }
+  ],
+  "insumos": [
+    {
+      "descricao": "Adubo mineral 4-30-16",
+      "unidade": "sc/50kg",
+      "quantidade": 20.0,
+      "valorUnitario": 243.35,
+      "valorTotal": 4867.0
+    },
+    {
+      "descricao": "Adubo mineral Sulfato de zinco",
+      "unidade": "kg",
+      "quantidade": 20.0,
+      "valorUnitario": 8.78,
+      "valorTotal": 175.59
+    },
+    {
+      "descricao": "Adubo mineral Uréia",
+      "unidade": "sc/50kg",
+      "quantidade": 2.0,
+      "valorUnitario": 241.78,
+      "valorTotal": 483.56
+    },
+    {
+      "descricao": "Adubo orgânico (Cama de frango)",
+      "unidade": "t",
+      "quantidade": 10.0,
+      "valorUnitario": 350.0,
+      "valorTotal": 3500.0
+    },
+    {
+      "descricao": "Agrotóxico (Azadiractina 12g/l)",
+      "unidade": "L",
+      "quantidade": 1.5,
+      "valorUnitario": 284.26,
+      "valorTotal": 426.39
+    },
+    {
+      "descricao": "Agrotóxico (Imidacloprido 700 g/kg)",
+      "unidade": "kg",
+      "quantidade": 0.3,
+      "valorUnitario": 112.0,
+      "valorTotal": 33.6
+    },
+    {
+      "descricao": "Agrotóxico (Iprodiona 500 g/l)",
+      "unidade": "L",
+      "quantidade": 3.0,
+      "valorUnitario": 197.74,
+      "valorTotal": 593.22
+    },
+    {
+      "descricao": "Mudas (Formação em bandejas de 200 células)",
+      "unidade": "und",
+      "quantidade": 554.0,
+      "valorUnitario": 20.5,
+      "valorTotal": 11357.0
+    }
+  ],
+  "outros": [
+    {
+      "descricao": "Energia elétrica p/ irrigação",
+      "unidade": "kwh",
+      "quantidade": 642.0,
+      "valorUnitario": 0.95,
+      "valorTotal": 609.9
+    }
+  ]
+}

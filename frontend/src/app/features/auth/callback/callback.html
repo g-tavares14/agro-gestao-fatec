@@ -1,0 +1,27 @@
+<section class="auth-split">
+  <div class="auth-form">
+    <div class="auth-form-inner">
+      <app-brand-mark to="/" />
+      @if (error()) {
+        <p class="eyebrow">Autenticação</p>
+        <h1>Não foi possível concluir o acesso.</h1>
+        <p class="subtitle">{{ errorDetail() }}</p>
+        <a mat-flat-button color="primary" routerLink="/login">Voltar ao login</a>
+      } @else {
+        <p class="eyebrow">Quase lá</p>
+        <h1>Abrindo a porteira…</h1>
+        <div class="loading">
+          <mat-spinner diameter="32" />
+          <p class="status">Estamos concluindo seu acesso.</p>
+        </div>
+      }
+    </div>
+  </div>
+  <aside class="auth-visual" aria-hidden="true">
+    <img src="images/login-field.jpg" alt="" />
+    <div class="auth-visual-copy">
+      <p class="eyebrow">Agro-Gestão</p>
+      <h2>Bem-vindo de volta ao campo.</h2>
+    </div>
+  </aside>
+</section>

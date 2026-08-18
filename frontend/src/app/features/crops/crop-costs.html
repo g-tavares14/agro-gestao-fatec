@@ -1,0 +1,122 @@
+<section class="feature-page">
+  <header class="page-header">
+    <div>
+      <h2>Custos de produção</h2>
+      @if (crop(); as current) {
+        <p class="lede">Lançamentos da cultura {{ current.name }}.</p>
+      }
+    </div>
+    <div class="actions">
+      @if (crop(); as current) {
+        <a mat-button [routerLink]="['/app/culturas', current.id]">Voltar à cultura</a>
+      }
+    </div>
+  </header>
+
+  @if (error(); as message) {
+    <p class="error-banner" role="alert">{{ message }}</p>
+  }
+
+  @if (loading()) {
+    <div class="loading">
+      <mat-spinner diameter="32" />
+      <span>Carregando custos…</span>
+    </div>
+  } @else if (!crop()) {
+    <app-empty-state
+      icon="grass"
+      title="Cultura não encontrada"
+      message="Não foi possível carregar os custos desta cultura."
+      ctaLabel="Voltar às culturas"
+      ctaLink="/app/culturas"
+    />
+  } @else {
+    <section class="panel">
+      <h3>{{ editingId() ? 'Editar custo' : 'Novo lançamento' }}</h3>
+      <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        <div class="form-grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Descrição</mat-label>
+            <input matInput formControlName="description" />
+            @if (fieldError(form.controls.description); as message) {
+              <mat-error>{{ message }}</mat-error>
+            }
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Categoria</mat-label>
+            <mat-select formControlName="category">
+              @for (category of categories; track category.value) {
+                <mat-option [value]="category.value">{{ category.label }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Valor (R$)</mat-label>
+            <input matInput type="number" min="0" step="0.01" formControlName="amount" />
+            @if (fieldError(form.controls.amount); as message) {
+              <mat-error>{{ message }}</mat-error>
+            }
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Data</mat-label>
+            <input matInput type="date" formControlName="date" />
+            @if (fieldError(form.controls.date); as message) {
+              <mat-error>{{ message }}</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="actions">
+          <button mat-flat-button color="primary" type="submit" [disabled]="submitting()">
+            {{ submitting() ? 'Salvando…' : editingId() ? 'Atualizar' : 'Lançar custo' }}
+          </button>
+          @if (editingId()) {
+            <button mat-button type="button" (click)="cancelEdit()">Cancelar edição</button>
+          }
+        </div>
+      </form>
+    </section>
+
+    @if (costs().length === 0) {
+      <app-empty-state
+        icon="payments"
+        title="Nenhum custo lançado"
+        message="Registre insumos, serviços e demais despesas desta cultura."
+      />
+    } @else {
+      <section class="panel table-wrap">
+        <table class="data">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Descrição</th>
+              <th>Categoria</th>
+              <th class="num">Valor</th>
+              <th class="num">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (cost of costs(); track cost.id) {
+              <tr>
+                <td>{{ cost.date | date: 'shortDate' }}</td>
+                <td>{{ cost.description }}</td>
+                <td>{{ categoryLabel(cost.category) }}</td>
+                <td class="num">{{ cost.amount | currency: 'BRL' }}</td>
+                <td class="actions-cell">
+                  <button mat-button type="button" (click)="startEdit(cost)">Editar</button>
+                  <button mat-button type="button" (click)="remove(cost)">Excluir</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="3">Total</td>
+              <td class="num">{{ total() | currency: 'BRL' }}</td>
+              <td></td>
+            </tr>
+          </tfoot>
+        </table>
+      </section>
+    }
+  }
+</section>

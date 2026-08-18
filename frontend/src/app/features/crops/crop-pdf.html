@@ -1,0 +1,265 @@
+<section class="feature-page">
+  <header class="page-header">
+    <div>
+      <h2>Importar PDF</h2>
+      <p class="lede">
+        Envie a ficha de custo de produção. Revise os dados extraídos antes de confirmar o cadastro.
+      </p>
+    </div>
+    <div class="actions">
+      <a mat-button routerLink="/app/culturas">Voltar</a>
+    </div>
+  </header>
+
+  @if (error(); as message) {
+    <p class="error-banner" role="alert">{{ message }}</p>
+  }
+
+  @if (loadingProperties()) {
+    <div class="loading">
+      <mat-spinner diameter="32" />
+      <span>Carregando propriedades…</span>
+    </div>
+  } @else if (properties().length === 0) {
+    @if (error()) {
+      <app-empty-state
+        icon="error_outline"
+        title="Não foi possível carregar"
+        message="Tente recarregar a página em instantes."
+      />
+    } @else {
+      <app-empty-state
+        icon="landscape"
+        title="Cadastre uma propriedade primeiro"
+        message="A importação exige uma propriedade de destino."
+        ctaLabel="Cadastrar propriedade"
+        ctaLink="/app/propriedades"
+      />
+    }
+  } @else if (step() === 'upload') {
+    <form class="panel" [formGroup]="uploadForm" (ngSubmit)="analyze()" novalidate>
+      <div class="form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Propriedade</mat-label>
+          <mat-select formControlName="propertyId">
+            @for (property of properties(); track property.id) {
+              <mat-option [value]="property.id">{{ property.name }}</mat-option>
+            }
+          </mat-select>
+          @if (fieldError(uploadForm.controls.propertyId); as message) {
+            <mat-error>{{ message }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="file-row">
+        <input
+          id="pdf-file"
+          type="file"
+          accept="application/pdf,.pdf"
+          (change)="onFileChange($event)"
+        />
+        @if (selectedFile(); as file) {
+          <span class="muted">{{ file.name }}</span>
+        }
+      </div>
+
+      <div class="actions">
+        <button mat-flat-button color="primary" type="submit" [disabled]="analyzing()">
+          {{ analyzing() ? 'Analisando…' : 'Analisar PDF' }}
+        </button>
+      </div>
+    </form>
+
+    @if (analyzing()) {
+      <div class="loading">
+        <mat-spinner diameter="32" />
+        <span>Extraindo dados da ficha. Isso pode levar alguns segundos…</span>
+      </div>
+    }
+  } @else {
+    @if (warnings().length > 0) {
+      <div class="warn-banner">
+        <strong>Avisos da extração</strong>
+        <ul>
+          @for (warning of warnings(); track warning) {
+            <li>{{ warning }}</li>
+          }
+        </ul>
+      </div>
+    }
+
+    <form class="stack" [formGroup]="reviewForm" (ngSubmit)="confirm()" novalidate>
+      <section class="panel">
+        <h3>Dados da cultura</h3>
+        <div class="form-grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Propriedade</mat-label>
+            <mat-select formControlName="propertyId">
+              @for (property of properties(); track property.id) {
+                <mat-option [value]="property.id">{{ property.name }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Nome da cultura</mat-label>
+            <input matInput formControlName="name" />
+            @if (fieldError(reviewForm.controls.name); as message) {
+              <mat-error>{{ message }}</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Variedade</mat-label>
+            <input matInput formControlName="variety" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Sistema de irrigação</mat-label>
+            <input matInput formControlName="irrigationSystem" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Área (ha)</mat-label>
+            <input matInput type="number" min="0" step="0.01" formControlName="areaHa" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status">
+              @for (status of statuses; track status.value) {
+                <mat-option [value]="status.value">{{ status.label }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Data de plantio</mat-label>
+            <input matInput type="date" formControlName="plantingDate" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Previsão de colheita</mat-label>
+            <input matInput type="date" formControlName="expectedHarvestDate" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full">
+            <mat-label>Produtividade esperada</mat-label>
+            <input matInput formControlName="expectedYield" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full">
+            <mat-label>Observações</mat-label>
+            <textarea matInput rows="3" formControlName="notes"></textarea>
+          </mat-form-field>
+        </div>
+
+        <mat-checkbox formControlName="importCosts">
+          Importar como custos de produção
+        </mat-checkbox>
+      </section>
+
+      @for (group of groups; track group.key) {
+        <section class="panel item-group">
+          <div class="page-header">
+            <h3>{{ group.title }}</h3>
+            <button mat-stroked-button type="button" (click)="addItem(group.key)">
+              <mat-icon>add</mat-icon>
+              Item
+            </button>
+          </div>
+
+          @if (itemsOf(group.key).length === 0) {
+            <p class="muted">Nenhum item neste grupo.</p>
+          } @else {
+            <div class="table-wrap">
+              <table class="data">
+                <thead>
+                  <tr>
+                    <th>Descrição</th>
+                    <th>Unidade</th>
+                    <th class="num">Qtde</th>
+                    <th class="num">Valor un.</th>
+                    <th class="num">Total</th>
+                    <th>Grupo</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody [formArrayName]="group.key">
+                  @for (item of itemsOf(group.key).controls; track item; let i = $index) {
+                    <tr [formGroupName]="i">
+                      <td>
+                        <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                          <input matInput formControlName="description" />
+                        </mat-form-field>
+                      </td>
+                      <td>
+                        <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                          <input matInput formControlName="unit" />
+                        </mat-form-field>
+                      </td>
+                      <td>
+                        <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                          <input matInput type="number" step="0.01" formControlName="quantity" />
+                        </mat-form-field>
+                      </td>
+                      <td>
+                        <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                          <input matInput type="number" step="0.01" formControlName="unitValue" />
+                        </mat-form-field>
+                      </td>
+                      <td>
+                        <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                          <input matInput type="number" step="0.01" formControlName="totalValue" />
+                        </mat-form-field>
+                      </td>
+                      <td>
+                        <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                          <mat-select
+                            [value]="categoryOf(group.key)"
+                            (selectionChange)="moveItem(group.key, i, $event.value)"
+                          >
+                            @for (category of categories; track category.value) {
+                              <mat-option [value]="category.value">{{ category.label }}</mat-option>
+                            }
+                          </mat-select>
+                        </mat-form-field>
+                      </td>
+                      <td class="actions-cell">
+                        <button
+                          mat-icon-button
+                          type="button"
+                          aria-label="Remover item"
+                          (click)="removeItem(group.key, i)"
+                        >
+                          <mat-icon>delete</mat-icon>
+                        </button>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="4">Subtotal</td>
+                    <td class="num">{{ groupTotal(group.key) | currency: 'BRL' }}</td>
+                    <td colspan="2"></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          }
+        </section>
+      }
+
+      <div class="actions">
+        <button mat-flat-button color="primary" type="submit" [disabled]="submitting()">
+          {{ submitting() ? 'Confirmando…' : 'Confirmar importação' }}
+        </button>
+        <button mat-button type="button" (click)="backToUpload()" [disabled]="submitting()">
+          Voltar ao envio
+        </button>
+      </div>
+    </form>
+  }
+</section>

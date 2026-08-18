@@ -1,0 +1,87 @@
+# =============================================================================
+# Agro-Gestão — o que não entra no Git
+# Mantenha .env.example versionado; nunca versione o .env real.
+# =============================================================================
+
+# --- Dependências ------------------------------------------------------------
+node_modules/
+.pnp
+.pnp.js
+.pnpm-store/
+
+# --- Artefatos de build (Angular, Maven, Docker) -----------------------------
+dist/
+out/
+build/
+target/
+.angular/
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+hs_err_pid*
+replay_pid*
+
+# --- TypeScript / Node -------------------------------------------------------
+*.tsbuildinfo
+.npm
+.sass-cache/
+.tmp/
+.temp/
+
+# --- Testes e cobertura ------------------------------------------------------
+coverage/
+.nyc_output/
+*.lcov
+.vitest/
+libpeerconnection.log
+testem.log
+
+# --- Ambiente e segredos -----------------------------------------------------
+.env
+.env.local
+.env.*.local
+!.env.example
+*.pem
+*.p12
+*.jks
+*.keystore
+
+# --- Logs e dumps ------------------------------------------------------------
+*.log
+logs/
+*.hprof
+
+# --- IDE / editores ----------------------------------------------------------
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+.project
+.classpath
+.settings/
+.factorypath
+*.swp
+*.swo
+*~
+*.sublime-workspace
+
+# --- Sistema operacional -----------------------------------------------------
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# --- Dados locais (MinIO fora do volume do Compose) --------------------------
+data/minio/
+minio_data/
+minio/data/
+
+# --- Lixo de merge / backup --------------------------------------------------
+*.orig
+*.bak
+*.tmp

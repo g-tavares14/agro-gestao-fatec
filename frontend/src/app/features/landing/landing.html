@@ -1,0 +1,101 @@
+<div class="page">
+  <header class="topbar">
+    <app-brand-mark to="/" />
+    <nav class="actions">
+      <a mat-button routerLink="/login">Entrar</a>
+      <a mat-flat-button color="primary" routerLink="/cadastro">Cadastrar</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-media" aria-hidden="true">
+        <img src="images/hero-field.jpg" alt="" />
+      </div>
+      <div class="hero-veil"></div>
+      <div class="hero-copy">
+        <p class="eyebrow">Plataforma acadêmica de gestão rural</p>
+        <h1>Do talhão ao relatório, com o pulso do campo.</h1>
+        <p class="lead">
+          Culturas, extração de PDF com IA, custos, diário e financeiro — um sistema
+          que respira o ritmo da propriedade.
+        </p>
+        <div class="hero-cta">
+          <a mat-flat-button color="primary" routerLink="/cadastro">Começar agora</a>
+          <a mat-stroked-button class="ghost" routerLink="/login">Já tenho conta</a>
+        </div>
+        <ul class="hero-chips">
+          <li class="hero-chip">Fichas EMATER</li>
+          <li class="hero-chip">Ações mecânicas e manuais</li>
+          <li class="hero-chip">DRE por cultura</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="stats">
+      <article class="stat-card">
+        <span>01</span>
+        <h2>Quatro grupos de custo</h2>
+        <p>Mecânicas, manuais, insumos e outros — como a lavoura realmente gasta.</p>
+      </article>
+      <article class="stat-card">
+        <span>02</span>
+        <h2>PDF vira dado</h2>
+        <p>O Gemini lê a ficha. Você revisa. Só então o sistema grava.</p>
+      </article>
+      <article class="stat-card">
+        <span>03</span>
+        <h2>Resultado à vista</h2>
+        <p>Receita, custo de produção e despesa no mesmo demonstrativo.</p>
+      </article>
+    </section>
+
+    <section class="modules" id="modulos">
+      <div class="section-head">
+        <p class="eyebrow">Módulos</p>
+        <h2>Tudo o que a propriedade pede, no mesmo ritmo.</h2>
+      </div>
+      <div class="module-grid">
+        @for (module of modules; track module.title) {
+          <article class="module-card">
+            <span class="module-icon material-icons" aria-hidden="true">{{ module.icon }}</span>
+            <h3>{{ module.title }}</h3>
+            <p>{{ module.description }}</p>
+          </article>
+        }
+      </div>
+    </section>
+
+    <section class="steps" id="como-funciona">
+      <div class="section-head">
+        <p class="eyebrow">Como funciona</p>
+        <h2>Três gestos. A operação inteira.</h2>
+      </div>
+      <ol class="step-list">
+        @for (step of steps; track step.title; let i = $index) {
+          <li class="step-card">
+            <span class="step-index">0{{ i + 1 }}</span>
+            <div>
+              <h3>{{ step.title }}</h3>
+              <p>{{ step.description }}</p>
+            </div>
+          </li>
+        }
+      </ol>
+    </section>
+
+    <section class="cta-band">
+      <div>
+        <p class="eyebrow">Pronto para o campo</p>
+        <h2>Organize a propriedade com método — e com energia.</h2>
+        <p>Cadastre-se e acompanhe culturas, custos e documentos numa base única.</p>
+      </div>
+      <a mat-flat-button color="primary" routerLink="/cadastro">Criar conta gratuita</a>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>© {{ year }} Agro-Gestão</span>
+    <span>Gestão rural com rigor técnico</span>
+  </footer>
+</div>

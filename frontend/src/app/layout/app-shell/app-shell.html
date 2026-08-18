@@ -1,0 +1,45 @@
+<div class="shell" [class.nav-open]="sidenavOpen()">
+  @if (isMobile() && sidenavOpen()) {
+    <button class="backdrop" type="button" aria-label="Fechar menu" (click)="closeMobileSidenav()"></button>
+  }
+
+  <aside class="sidebar">
+    <app-brand-mark
+      to="/app/dashboard"
+      variant="inverse"
+      tagline="Gestão rural"
+      (click)="closeMobileSidenav()"
+    />
+
+    <nav class="nav">
+      @for (item of navItems; track item.path) {
+        <a [routerLink]="item.path" routerLinkActive="active" (click)="closeMobileSidenav()">
+          <mat-icon>{{ item.icon }}</mat-icon>
+          <span>{{ item.label }}</span>
+        </a>
+      }
+    </nav>
+  </aside>
+
+  <div class="content">
+    <header class="toolbar">
+      @if (isMobile()) {
+        <button class="menu-btn" type="button" (click)="toggleSidenav()" aria-label="Abrir menu">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <app-brand-mark to="/app/dashboard" [compact]="true" />
+      }
+      <div class="title-block">
+        <p class="eyebrow">Operação</p>
+        <h1>{{ pageTitle() }}</h1>
+      </div>
+      <span class="spacer"></span>
+      <span class="user">{{ userName() }}</span>
+      <button class="logout-btn" type="button" (click)="logout()">Sair</button>
+    </header>
+
+    <main class="main">
+      <router-outlet />
+    </main>
+  </div>
+</div>

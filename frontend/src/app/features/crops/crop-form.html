@@ -1,0 +1,116 @@
+<section class="feature-page">
+  <header class="page-header">
+    <div>
+      <h2>Nova cultura</h2>
+      <p class="lede">Registre o ciclo produtivo com os dados disponíveis da lavoura.</p>
+    </div>
+    <div class="actions">
+      <a mat-button routerLink="/app/culturas">Voltar</a>
+    </div>
+  </header>
+
+  @if (error(); as message) {
+    <p class="error-banner" role="alert">{{ message }}</p>
+  }
+
+  @if (loading()) {
+    <div class="loading">
+      <mat-spinner diameter="32" />
+      <span>Carregando formulário…</span>
+    </div>
+  } @else if (properties().length === 0) {
+    @if (error()) {
+      <app-empty-state
+        icon="error_outline"
+        title="Não foi possível carregar"
+        message="Tente recarregar a página em instantes."
+      />
+    } @else {
+      <app-empty-state
+        icon="landscape"
+        title="Cadastre uma propriedade primeiro"
+        message="Toda cultura precisa estar vinculada a uma propriedade."
+        ctaLabel="Cadastrar propriedade"
+        ctaLink="/app/propriedades"
+      />
+    }
+  } @else {
+    <form class="panel" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <div class="form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Propriedade</mat-label>
+          <mat-select formControlName="propertyId">
+            @for (property of properties(); track property.id) {
+              <mat-option [value]="property.id">{{ property.name }}</mat-option>
+            }
+          </mat-select>
+          @if (fieldError(form.controls.propertyId); as message) {
+            <mat-error>{{ message }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Nome da cultura</mat-label>
+          <input matInput formControlName="name" />
+          @if (fieldError(form.controls.name); as message) {
+            <mat-error>{{ message }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Variedade</mat-label>
+          <input matInput formControlName="variety" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Sistema de irrigação</mat-label>
+          <input matInput formControlName="irrigationSystem" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Área (ha)</mat-label>
+          <input matInput type="number" min="0" step="0.01" formControlName="areaHa" />
+          @if (fieldError(form.controls.areaHa); as message) {
+            <mat-error>{{ message }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Status</mat-label>
+          <mat-select formControlName="status">
+            @for (status of statuses; track status.value) {
+              <mat-option [value]="status.value">{{ status.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Data de plantio</mat-label>
+          <input matInput type="date" formControlName="plantingDate" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Previsão de colheita</mat-label>
+          <input matInput type="date" formControlName="expectedHarvestDate" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>Produtividade esperada</mat-label>
+          <input matInput formControlName="expectedYield" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>Observações</mat-label>
+          <textarea matInput rows="3" formControlName="notes"></textarea>
+        </mat-form-field>
+      </div>
+
+      <div class="actions">
+        <button mat-flat-button color="primary" type="submit" [disabled]="submitting()">
+          {{ submitting() ? 'Salvando…' : 'Salvar cultura' }}
+        </button>
+        <a mat-button routerLink="/app/culturas">Cancelar</a>
+      </div>
+    </form>
+  }
+</section>

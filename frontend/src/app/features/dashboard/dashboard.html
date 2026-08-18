@@ -1,0 +1,134 @@
+<section class="feature-page dashboard">
+  <header class="page-header">
+    <div>
+      <p class="date">{{ today | date: 'fullDate' }}</p>
+      <h2>{{ greeting() }}</h2>
+      <p class="lede">Síntese das propriedades, culturas ativas e resultado financeiro do mês.</p>
+    </div>
+  </header>
+
+  @if (error(); as message) {
+    <p class="error-banner" role="alert">{{ message }}</p>
+  }
+
+  @if (loading()) {
+    <div class="loading">
+      <mat-spinner diameter="32" />
+      <span>Carregando painel…</span>
+    </div>
+  } @else if (error()) {
+    <app-empty-state
+      icon="error_outline"
+      title="Não foi possível carregar o painel"
+      message="Tente recarregar a página em instantes."
+    />
+  } @else {
+    <div class="kpi-grid">
+      <article class="kpi">
+        <span>Receita do mês</span>
+        <strong>{{ kpis().receitaMes | currency: 'BRL' }}</strong>
+      </article>
+      <article class="kpi">
+        <span>Despesa do mês</span>
+        <strong>{{ kpis().despesaMes | currency: 'BRL' }}</strong>
+      </article>
+      <article class="kpi" [class.positive]="kpis().resultadoMes > 0" [class.negative]="kpis().resultadoMes < 0">
+        <span>Resultado do mês</span>
+        <strong>{{ kpis().resultadoMes | currency: 'BRL' }}</strong>
+      </article>
+      <article class="kpi">
+        <span>Culturas ativas</span>
+        <strong>{{ kpis().culturasAtivas }}</strong>
+      </article>
+      <article class="kpi">
+        <span>Área cultivada</span>
+        <strong>{{ kpis().areaCultivadaHa | number: '1.0-2' }} ha</strong>
+      </article>
+    </div>
+
+    <section class="panel">
+      <div class="section-head">
+        <h3>Propriedades</h3>
+        <a routerLink="/app/propriedades">Gerenciar</a>
+      </div>
+      @if (properties().length === 0) {
+        <app-empty-state
+          icon="landscape"
+          title="Nenhuma propriedade"
+          message="Cadastre uma propriedade para acompanhar a operação no painel."
+          ctaLabel="Cadastrar propriedade"
+          ctaLink="/app/propriedades"
+        />
+      } @else {
+        <div class="card-grid">
+          @for (property of properties(); track property.id) {
+            <a
+              class="entity-card link-card"
+              [routerLink]="['/app/culturas']"
+              [queryParams]="{ propertyId: property.id }"
+              (click)="selectProperty(property.id)"
+            >
+              <h3>{{ property.name }}</h3>
+              <p>{{ locationOf(property) }}</p>
+              <p>
+                @if (property.totalAreaHa != null) {
+                  {{ property.totalAreaHa | number: '1.0-2' }} ha
+                } @else {
+                  Área não informada
+                }
+              </p>
+              <p>{{ property.activeCrops }} cultura(s) ativa(s)</p>
+            </a>
+          }
+        </div>
+      }
+    </section>
+
+    <section class="panel">
+      <div class="section-head">
+        <h3>Culturas ativas</h3>
+        <a routerLink="/app/culturas">Ver culturas</a>
+      </div>
+      @if (activeCrops().length === 0) {
+        <app-empty-state
+          icon="grass"
+          title="Nenhuma cultura ativa"
+          message="Importe um PDF de custo ou cadastre uma cultura para acompanhar o ciclo."
+          ctaLabel="Ir para culturas"
+          ctaLink="/app/culturas"
+        />
+      } @else {
+        <div class="table-wrap">
+          <table class="data">
+            <thead>
+              <tr>
+                <th>Cultura</th>
+                <th>Propriedade</th>
+                <th>Status</th>
+                <th class="num">Área</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (crop of activeCrops(); track crop.id) {
+                <tr>
+                  <td>
+                    <a class="row-link" [routerLink]="['/app/culturas', crop.id]">{{ crop.name }}</a>
+                  </td>
+                  <td>{{ crop.propertyName || '—' }}</td>
+                  <td><app-status-chip [status]="crop.status" /></td>
+                  <td class="num">
+                    @if (crop.areaHa != null) {
+                      {{ crop.areaHa | number: '1.0-2' }} ha
+                    } @else {
+                      —
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </section>
+  }
+</section>

@@ -1,0 +1,19 @@
+jwt:
+  secret: test-secret-key-that-is-at-least-32-bytes
+  expiration-ms: 28800000
+
+app:
+  frontend-url: http://localhost
+  google:
+    client-id: ""
+    client-secret: ""
+
+gemini:
+  api-key: ""
+  model: gemini-2.5-flash
+
+minio:
+  endpoint: http://localhost:9000
+  access-key: minioadmin
+  secret-key: minioadmin
+  bucket: agro-gestao

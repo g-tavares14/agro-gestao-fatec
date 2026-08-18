@@ -1,0 +1,206 @@
+<section class="feature-page">
+  <header class="page-header">
+    <div>
+      <h2>Financeiro</h2>
+      <p class="lede">Lance receitas e despesas e acompanhe o demonstrativo da propriedade.</p>
+    </div>
+  </header>
+
+  @if (error(); as message) {
+    <p class="error-banner" role="alert">{{ message }}</p>
+  }
+
+  @if (loadingProperties()) {
+    <div class="loading">
+      <mat-spinner diameter="32" />
+      <span>Carregando propriedades…</span>
+    </div>
+  } @else if (properties().length === 0) {
+    @if (error()) {
+      <app-empty-state
+        icon="error_outline"
+        title="Não foi possível carregar"
+        message="Tente recarregar a página em instantes."
+      />
+    } @else {
+      <app-empty-state
+        icon="landscape"
+        title="Cadastre uma propriedade primeiro"
+        message="Os lançamentos financeiros são vinculados a uma propriedade."
+        ctaLabel="Cadastrar propriedade"
+        ctaLink="/app/propriedades"
+      />
+    }
+  } @else {
+    <form class="filter-bar" [formGroup]="filterForm">
+      <mat-form-field appearance="outline">
+        <mat-label>Propriedade</mat-label>
+        <mat-select formControlName="propertyId">
+          <mat-option value="">Selecione</mat-option>
+          @for (property of properties(); track property.id) {
+            <mat-option [value]="property.id">{{ property.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Cultura (opcional)</mat-label>
+        <mat-select formControlName="cropId">
+          <mat-option value="">Todas</mat-option>
+          @for (crop of crops(); track crop.id) {
+            <mat-option [value]="crop.id">{{ crop.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </form>
+
+    @if (!filterForm.controls.propertyId.value) {
+      <app-empty-state
+        icon="filter_alt"
+        title="Selecione uma propriedade"
+        message="Escolha a propriedade para consultar o demonstrativo e os lançamentos."
+      />
+    } @else {
+      <section class="panel">
+        <h3>Demonstrativo</h3>
+        @if (statement(); as dre) {
+          <div class="dre-grid">
+            <div class="dre-item">
+              <span>Receita bruta</span>
+              <strong>{{ dre.receitaBruta | currency: 'BRL' }}</strong>
+            </div>
+            <div class="dre-item">
+              <span>Custos de produção</span>
+              <strong>{{ dre.custosProducao | currency: 'BRL' }}</strong>
+            </div>
+            <div class="dre-item">
+              <span>Outras despesas</span>
+              <strong>{{ dre.outrasDespesas | currency: 'BRL' }}</strong>
+            </div>
+            <div
+              class="dre-item"
+              [class.positive]="dre.resultado > 0"
+              [class.negative]="dre.resultado < 0"
+            >
+              <span>Resultado</span>
+              <strong>{{ dre.resultado | currency: 'BRL' }}</strong>
+            </div>
+          </div>
+        } @else if (loading()) {
+          <div class="loading">
+            <mat-spinner diameter="32" />
+            <span>Carregando lançamentos…</span>
+          </div>
+        }
+      </section>
+
+      <section class="panel">
+        <h3>{{ editingId() ? 'Editar lançamento' : 'Novo lançamento' }}</h3>
+        <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+          <div class="form-grid">
+            <mat-form-field appearance="outline">
+              <mat-label>Tipo</mat-label>
+              <mat-select formControlName="type">
+                @for (type of types; track type.value) {
+                  <mat-option [value]="type.value">{{ type.label }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Cultura</mat-label>
+              <mat-select formControlName="cropId">
+                <mat-option value="">Geral da propriedade</mat-option>
+                @for (crop of crops(); track crop.id) {
+                  <mat-option [value]="crop.id">{{ crop.name }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Categoria</mat-label>
+              <input matInput formControlName="category" />
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Data</mat-label>
+              <input matInput type="date" formControlName="date" />
+              @if (fieldError(form.controls.date); as message) {
+                <mat-error>{{ message }}</mat-error>
+              }
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Descrição</mat-label>
+              <input matInput formControlName="description" />
+              @if (fieldError(form.controls.description); as message) {
+                <mat-error>{{ message }}</mat-error>
+              }
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Valor (R$)</mat-label>
+              <input matInput type="number" min="0" step="0.01" formControlName="amount" />
+              @if (fieldError(form.controls.amount); as message) {
+                <mat-error>{{ message }}</mat-error>
+              }
+            </mat-form-field>
+          </div>
+          <div class="actions">
+            <button mat-flat-button color="primary" type="submit" [disabled]="submitting()">
+              {{ submitting() ? 'Salvando…' : editingId() ? 'Atualizar' : 'Lançar' }}
+            </button>
+            @if (editingId()) {
+              <button mat-button type="button" (click)="cancelEdit()">Cancelar edição</button>
+            }
+          </div>
+        </form>
+      </section>
+
+      @if (loading() && statement()) {
+        <div class="loading">
+          <mat-spinner diameter="32" />
+          <span>Carregando lançamentos…</span>
+        </div>
+      } @else if (entries().length === 0) {
+        @if (!error()) {
+          <app-empty-state
+            icon="payments"
+            title="Nenhum lançamento"
+            message="Registre receitas e despesas para compor o demonstrativo."
+          />
+        }
+      } @else {
+        <section class="panel table-wrap">
+          <table class="data">
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Tipo</th>
+                <th>Descrição</th>
+                <th>Categoria</th>
+                <th>Cultura</th>
+                <th class="num">Valor</th>
+                <th class="num">Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (entry of entries(); track entry.id) {
+                <tr>
+                  <td>{{ entry.date | date: 'shortDate' }}</td>
+                  <td>
+                    <span class="type-chip" [class.receita]="entry.type === 'RECEITA'" [class.despesa]="entry.type === 'DESPESA'">
+                      {{ typeLabel(entry.type) }}
+                    </span>
+                  </td>
+                  <td>{{ entry.description }}</td>
+                  <td>{{ entry.category || '—' }}</td>
+                  <td>{{ cropName(entry) }}</td>
+                  <td class="num">{{ entry.amount | currency: 'BRL' }}</td>
+                  <td class="actions-cell">
+                    <button mat-button type="button" (click)="startEdit(entry)">Editar</button>
+                    <button mat-button type="button" (click)="remove(entry)">Excluir</button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </section>
+      }
+    }
+  }
+</section>

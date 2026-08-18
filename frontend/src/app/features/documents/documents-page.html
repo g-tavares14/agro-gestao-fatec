@@ -1,0 +1,131 @@
+<section class="feature-page">
+  <header class="page-header">
+    <div>
+      <h2>Documentos</h2>
+      <p class="lede">Arquive notas, laudos e fichas da propriedade. O download preserva o arquivo original.</p>
+    </div>
+  </header>
+
+  @if (error(); as message) {
+    <p class="error-banner" role="alert">{{ message }}</p>
+  }
+
+  @if (loadingProperties()) {
+    <div class="loading">
+      <mat-spinner diameter="32" />
+      <span>Carregando propriedades…</span>
+    </div>
+  } @else if (properties().length === 0) {
+    @if (error()) {
+      <app-empty-state
+        icon="error_outline"
+        title="Não foi possível carregar"
+        message="Tente recarregar a página em instantes."
+      />
+    } @else {
+      <app-empty-state
+        icon="landscape"
+        title="Cadastre uma propriedade primeiro"
+        message="Os documentos ficam vinculados a uma propriedade."
+        ctaLabel="Cadastrar propriedade"
+        ctaLink="/app/propriedades"
+      />
+    }
+  } @else {
+    <form class="filter-bar" [formGroup]="filterForm">
+      <mat-form-field appearance="outline">
+        <mat-label>Propriedade</mat-label>
+        <mat-select formControlName="propertyId">
+          <mat-option value="">Selecione</mat-option>
+          @for (property of properties(); track property.id) {
+            <mat-option [value]="property.id">{{ property.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </form>
+
+    @if (!filterForm.controls.propertyId.value) {
+      <app-empty-state
+        icon="filter_alt"
+        title="Selecione uma propriedade"
+        message="Escolha a propriedade para enviar e consultar documentos."
+      />
+    } @else {
+      <section class="panel">
+        <h3>Enviar arquivo</h3>
+        <form [formGroup]="uploadForm" (ngSubmit)="upload()" novalidate>
+          <div class="form-grid">
+            <mat-form-field appearance="outline">
+              <mat-label>Cultura (opcional)</mat-label>
+              <mat-select formControlName="cropId">
+                <mat-option value="">Somente a propriedade</mat-option>
+                @for (crop of crops(); track crop.id) {
+                  <mat-option [value]="crop.id">{{ crop.name }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="file-row">
+            <input type="file" (change)="onFileChange($event)" />
+            @if (selectedFile(); as file) {
+              <span class="muted">{{ file.name }} ({{ formatBytes(file.size) }})</span>
+            }
+          </div>
+          <button mat-flat-button color="primary" type="submit" [disabled]="uploading()">
+            <mat-icon>upload</mat-icon>
+            {{ uploading() ? 'Enviando…' : 'Enviar documento' }}
+          </button>
+        </form>
+      </section>
+
+      @if (loading()) {
+        <div class="loading">
+          <mat-spinner diameter="32" />
+          <span>Carregando documentos…</span>
+        </div>
+      } @else if (documents().length === 0) {
+        @if (!error()) {
+          <app-empty-state
+            icon="folder"
+            title="Nenhum documento"
+            message="Envie o primeiro arquivo desta propriedade."
+          />
+        }
+      } @else {
+        <section class="panel table-wrap">
+          <table class="data">
+            <thead>
+              <tr>
+                <th>Arquivo</th>
+                <th>Cultura</th>
+                <th>Tamanho</th>
+                <th>Envio</th>
+                <th class="num">Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (doc of documents(); track doc.id) {
+                <tr>
+                  <td>{{ doc.originalName }}</td>
+                  <td>{{ cropName(doc) }}</td>
+                  <td>{{ formatBytes(doc.sizeBytes) }}</td>
+                  <td>
+                    @if (doc.createdAt) {
+                      {{ doc.createdAt | date: 'short' }}
+                    } @else {
+                      —
+                    }
+                  </td>
+                  <td class="actions-cell">
+                    <button mat-button type="button" (click)="download(doc)">Baixar</button>
+                    <button mat-button type="button" (click)="remove(doc)">Excluir</button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </section>
+      }
+    }
+  }
+</section>

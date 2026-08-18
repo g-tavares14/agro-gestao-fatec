@@ -1,0 +1,140 @@
+<section class="feature-page">
+  @if (error(); as message) {
+    <p class="error-banner" role="alert">{{ message }}</p>
+  }
+
+  @if (loading()) {
+    <div class="loading">
+      <mat-spinner diameter="32" />
+      <span>Carregando cultura…</span>
+    </div>
+  } @else if (crop(); as current) {
+    <header class="page-header">
+      <div>
+        <h2>{{ title() }}</h2>
+        <p class="lede">
+          {{ current.propertyName || 'Propriedade vinculada' }}
+          @if (current.variety) {
+            · {{ current.variety }}
+          }
+          @if (current.irrigationSystem) {
+            · {{ current.irrigationSystem }}
+          }
+          @if (current.areaHa != null) {
+            · {{ current.areaHa | number: '1.0-2' }} ha
+          }
+        </p>
+      </div>
+      <div class="actions">
+        <app-status-chip [status]="current.status" />
+        <a mat-stroked-button [routerLink]="['/app/culturas', current.id, 'custos']">Custos</a>
+        <button mat-button type="button" (click)="remove()">Excluir</button>
+        <a mat-button routerLink="/app/culturas">Voltar</a>
+      </div>
+    </header>
+
+    @if (current.expectedYield) {
+      <p class="muted">Produtividade esperada: {{ current.expectedYield }}</p>
+    }
+
+    <section class="panel">
+      <h3>Ciclo produtivo</h3>
+      <form [formGroup]="form" (ngSubmit)="saveCycle()" novalidate>
+        <div class="form-grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status">
+              @for (status of statuses; track status.value) {
+                <mat-option [value]="status.value">{{ status.label }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Data de plantio</mat-label>
+            <input matInput type="date" formControlName="plantingDate" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Previsão de colheita</mat-label>
+            <input matInput type="date" formControlName="expectedHarvestDate" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="full">
+            <mat-label>Observações</mat-label>
+            <textarea matInput rows="3" formControlName="notes"></textarea>
+          </mat-form-field>
+        </div>
+        <button mat-flat-button color="primary" type="submit" [disabled]="saving()">
+          {{ saving() ? 'Salvando…' : 'Atualizar ciclo' }}
+        </button>
+      </form>
+    </section>
+
+    <section class="panel">
+      <div class="page-header">
+        <h3>Itens planejados</h3>
+        <a mat-stroked-button [routerLink]="['/app/culturas', current.id, 'custos']">
+          Ver custos de produção
+        </a>
+      </div>
+
+      @for (group of groups; track group.key) {
+        <div class="item-group">
+          <h3>{{ group.title }}</h3>
+          @if (itemsOf(current, group.key).length === 0) {
+            <p class="muted">Nenhum item neste grupo.</p>
+          } @else {
+            <div class="table-wrap">
+              <table class="data">
+                <thead>
+                  <tr>
+                    <th>Descrição</th>
+                    <th>Unidade</th>
+                    <th class="num">Qtde</th>
+                    <th class="num">Valor un.</th>
+                    <th class="num">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (item of itemsOf(current, group.key); track item.id ?? item.description) {
+                    <tr>
+                      <td>{{ item.description }}</td>
+                      <td>{{ item.unit || '—' }}</td>
+                      <td class="num">{{ item.quantity ?? '—' }}</td>
+                      <td class="num">
+                        @if (item.unitValue != null) {
+                          {{ item.unitValue | currency: 'BRL' }}
+                        } @else {
+                          —
+                        }
+                      </td>
+                      <td class="num">
+                        @if (item.totalValue != null) {
+                          {{ item.totalValue | currency: 'BRL' }}
+                        } @else {
+                          —
+                        }
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="4">Subtotal</td>
+                    <td class="num">{{ totalOf(itemsOf(current, group.key)) | currency: 'BRL' }}</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          }
+        </div>
+      }
+    </section>
+  } @else {
+    <app-empty-state
+      icon="grass"
+      title="Cultura não encontrada"
+      message="Não foi possível exibir esta cultura. Volte à lista e tente novamente."
+      ctaLabel="Voltar às culturas"
+      ctaLink="/app/culturas"
+    />
+  }
+</section>
