@@ -1,6 +1,6 @@
 # Agro-Gestão
 
-[![Licença: MIT](https://img.shields.io/badge/licen%C3%A7a-MIT-2e7d32.svg)](LICENSE)
+[![Licença: PolyForm Noncommercial](https://img.shields.io/badge/licen%C3%A7a-PolyForm%20Noncommercial-2e7d32.svg)](LICENSE)
 
 Plataforma acadêmica de gestão rural para **pequenos produtores de Mogi das Cruzes**. O sistema reúne propriedade, culturas, custos de produção, diário de campo, financeiro e documentos num só lugar — inclusive importando fichas de custo em PDF (formato EMATER-DF) com o modelo generativo Gemini.
 
@@ -151,7 +151,7 @@ agro-gestao/
 ├── docker-compose.yml            # postgres, minio, minio-init, backend, frontend
 ├── .env.example                  # Modelo de variáveis (sem segredos reais)
 ├── .gitignore                    # Dependências, builds, .env e dados locais
-├── LICENSE                       # MIT
+├── LICENSE                       # PolyForm Noncommercial 1.0.0
 └── README.md
 ```
 
@@ -166,7 +166,9 @@ O `.gitignore` da raiz cobre o monorepo: `node_modules/`, `dist/`, `target/`, `.
 
 ## Licença
 
-Distribuído sob a [licença MIT](LICENSE).
+Distribuído sob a [PolyForm Noncommercial License 1.0.0](LICENSE).
+
+Uso permitido para fins não comerciais: estudo, pesquisa, TCC, aulas na Fatec e uso gratuito por produtores, cooperativas e instituições de ensino ou governo. **Não é permitido vender** o software, cobrá-lo como produto ou serviço, nem usá-lo para fins comerciais sem autorização do autor.
 
 ## Autoria e créditos
 
