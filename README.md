@@ -57,6 +57,13 @@ O Nginx do frontend encaminha `/api`, `/oauth2` e `/login/oauth2` para o backend
 
 Não é necessário instalar Java, Node.js ou PostgreSQL na máquina hospedeira.
 
+## Repositório
+
+```bash
+git clone https://github.com/g-tavares14/agro-gestao-fatec.git
+cd agro-gestao-fatec
+```
+
 ## Configuração do ambiente
 
 Na raiz do repositório:
